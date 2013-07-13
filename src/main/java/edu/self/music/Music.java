@@ -1,4 +1,4 @@
-package music;
+package edu.self.music;
 
 import java.lang.Thread;
 
