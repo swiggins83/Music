@@ -1,6 +1,4 @@
-Voices
-------
+Drums
+-----
 
-Seeing if I can get two voices to play at the same time!
-
-And it works!
+A recreation of the drum track from Radiohead's "Idioteque."
