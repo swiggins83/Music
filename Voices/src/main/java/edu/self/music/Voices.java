@@ -14,15 +14,19 @@ public class Voices {
 
         Player player = new Player();
 
-        Pattern voice1 = new Pattern("V1 ");
-        Pattern voice2 = new Pattern("V2 ");
+        Pattern trumpet1 = new Pattern("V1 I[Trumpet]");
+        Pattern trumpet2 = new Pattern("V2 I[Trumpet]");
+        Pattern tuba = new Pattern("V3 I[Tuba]");
+
         Pattern song = new Pattern();
 
-        voice1.add("C E D F E G A B C6");
-        voice2.add("E G F A G B C G E");
+        trumpet1.add("X[Volume]=7500 C E D F E G A B C6q. R");
+        trumpet2.add("X[Volume]=7500 E G F A G B C G Eq. R");
+        tuba.add("X[Volume]=7500 C3h C3h C3h F2 G2 C2q. R");
         
-        song.add(voice1);
-        song.add(voice2);
+        song.add(trumpet1);
+        song.add(trumpet2);
+        song.add(tuba);
 
         player.play(song);
         player.close();
