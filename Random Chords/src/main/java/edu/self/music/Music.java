@@ -11,19 +11,24 @@ import org.jfugue.Pattern;
 public class Music {
 
     public static void main(String[] args) throws InterruptedException {
-
+		String[] noteLength = {
+			"w", "h", "q", "i", "s"
+		};
+		
         String[] notes = {
             "Cmaj", "Ebmaj", "Fmaj", "Gmaj", "Abmaj", "Bbmaj",
             "Cmaj^", "Ebmaj^", "Fmaj^", "Gmaj^", "Abmaj^", "Bbmaj",
-            "Cmaj^^", "Ebmaj^^", "Fmaj^^", "Gmaj^^", "Abmaj^^", "Bbmaj",
+            "Cmaj^^", "Ebmaj^^", "Fmaj^^", "Gmaj^^", "Abmaj^^", "Bbmaj^^",
         };
+
         Pattern pattern = new Pattern();
-        while(true) {
-            Player player = new Player();
-            int rnd = new Random().nextInt(notes.length);
-            player.play("I80 " + notes[rnd]);
-            Thread.sleep(500);
-            player.close();
+		Player player = new Player();
+		Random rnd = new Random();
+
+		while(true) {
+            player.play("I80 " + notes[rnd.nextInt(notes.length)]
+						+ noteLength[rnd.nextInt(noteLength.length)]);
         }
+        //player.close();
     }
 }
