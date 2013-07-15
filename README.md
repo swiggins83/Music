@@ -9,12 +9,7 @@ Prerequisites
 1. Download [JFugue](http://www.jfugue.org/jfugue-4.0.3.jar).
 2. Install JFugue to your local ```~/.m2``` repository:
 
-        mvn install:install-file \
-        -Dfile=/path/to/jfugue-4.0.3.jar \
-        -DgroupId=jfugue \
-        -DartifactId=jfugue \
-        -Dversion=4.0.3 \
-        -Dpackaging=jar \
+        mvn install:install-file -Dfile=/path/to/jfugue-4.0.3.jar -DgroupId=jfugue -DartifactId=jfugue -Dversion=4.0.3 -Dpackaging=jar
 
 Execution
 ---------
