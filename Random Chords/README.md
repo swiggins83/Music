@@ -7,14 +7,13 @@ If you're curious and want to see it work, follow the steps below.
 Prerequisites
 -------------
 1. Download [JFugue](http://www.jfugue.org/jfugue-4.0.3.jar).
-2. Install JFugue to your local ```~/.m2``` repository:
+2. Install JFugue to your local ```~/.m2``` repository (substitute your own JFugue location):
 
         mvn install:install-file -Dfile=/path/to/jfugue-4.0.3.jar -DgroupId=jfugue -DartifactId=jfugue -Dversion=4.0.3 -Dpackaging=jar
 
 Execution
 ---------
-Compile with ```mvn clean package``` and run with ```mvn exec:java```
-(this is a plugin).
+In the "Random Chords" directory, compile with ```mvn clean package```, then run with ```mvn exec:java``` (a plugin).
 
 Alternatively, to run without Maven stuff spat out into your terminal:
 
