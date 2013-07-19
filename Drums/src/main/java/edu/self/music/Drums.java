@@ -2,6 +2,8 @@ package edu.self.music;
 
 import java.lang.Thread;
 
+
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -13,11 +15,19 @@ public class Drums {
 
     public static void main(String[] args) {
 
+        // init
         Player player = new Player();
+        ArrayList<Rhythm> rhythmList = new ArrayList<Rhythm>();
 		Rhythm rhythm1 = new Rhythm();
 		Rhythm rhythm1Var = new Rhythm();
 		Rhythm rhythm1Long = new Rhythm();
+        Pattern pad = new Pattern("V2 I[POLYSYNTH]");
 
+        rhythmList.add(rhythm1);
+        rhythmList.add(rhythm1Var);
+        rhythmList.add(rhythm1Long);
+        
+        // set drum layers
 		rhythm1.setLayer(1, "o.........o...o.o....o..o.......");
 		rhythm1.setLayer(2, "....*.......*.......*.......*...");
 		rhythm1.setLayer(3, "..^...^...^...^...^...^...^...^.");
@@ -27,46 +37,41 @@ public class Drums {
 		rhythm1Var.setLayer(2, "....*.......*.......*...");
 		rhythm1Var.setLayer(3, "..^...^...^...^...^...^.");
 		rhythm1Var.setLayer(4, "........................");
-
 		
 		rhythm1Long.setLayer(1, "o.........o...o.o....o..o.......................................................");
 		rhythm1Long.setLayer(2, "....*.......*.......*.......*.......*.......*.......*.......*.......*.......*...");
 		rhythm1Long.setLayer(3, "..^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^.");
 		rhythm1Long.setLayer(4, "!...............................................................................");
 
-		rhythm1.addSubstitution('o', "[BASS_DRUM]s");
-		rhythm1.addSubstitution('*', "[ACOUSTIC_SNARE]s");
-		rhythm1.addSubstitution('^', "[PEDAL_HI_HAT]s");
-		rhythm1.addSubstitution('!', "[CRASH_CYMBAL_1]s");
-		rhythm1.addSubstitution('.', "Rs");
-
-		rhythm1Var.addSubstitution('o', "[BASS_DRUM]s");
-		rhythm1Var.addSubstitution('*', "[ACOUSTIC_SNARE]s");
-		rhythm1Var.addSubstitution('^', "[PEDAL_HI_HAT]s");
-		rhythm1Var.addSubstitution('!', "[CRASH_CYMBAL_1]s");
-		rhythm1Var.addSubstitution('.', "Rs");
-
-		rhythm1Long.addSubstitution('o', "[BASS_DRUM]s");
-		rhythm1Long.addSubstitution('*', "[ACOUSTIC_SNARE]s");
-		rhythm1Long.addSubstitution('^', "[PEDAL_HI_HAT]s");
-		rhythm1Long.addSubstitution('!', "[CRASH_CYMBAL_1]s");
-		rhythm1Long.addSubstitution('.', "Rs");
+        // set drum instrument substitution
+        for( Rhythm r : rhythmList )
+        {
+            r.addSubstitution('o', "[BASS_DRUM]s");
+            r.addSubstitution('*', "[ACOUSTIC_SNARE]s");
+            r.addSubstitution('^', "[PEDAL_HI_HAT]s");
+            r.addSubstitution('!', "[CRASH_CYMBAL_1]s");
+            r.addSubstitution('.', "Rs");
+        }
 
         Pattern rhythm1Pat = rhythm1.getPattern();
         Pattern rhythm1VarPat = rhythm1Var.getPattern();
         Pattern rhythm1LongPat = rhythm1Long.getPattern();
 
+        //       pad rest layer
+        //       1  2  3  4  5  6  7  C7M/E        C7M/G      Em      G
+        pad.add("Rw Rw Rw Rw Rw Rw E+B+E+G+C+Ew G+C+E+B+Ew E+B+E+Gw G+D+Bw Rw E+B+E+G+C+Ew G+C+E+B+Ew E+B+E+Gw G+D+Bw Rw ");
+
+
 		Pattern wholeSong = new Pattern();
 		
+        wholeSong.add(pad);
 		// mostly kinda right
 		// intro
-		System.out.println("intro");
 		wholeSong.add(rhythm1Pat);
 		wholeSong.add(rhythm1VarPat);
 		wholeSong.add(rhythm1VarPat);
 		wholeSong.add(rhythm1VarPat);
 		// other instruments
-		System.out.println("other instruments");
 		wholeSong.add(rhythm1LongPat);
 		wholeSong.add(rhythm1LongPat);
 		wholeSong.add(rhythm1LongPat);
@@ -78,54 +83,36 @@ public class Drums {
 		wholeSong.add(rhythm1VarPat);
 		wholeSong.add(rhythm1VarPat);
 		wholeSong.add(rhythm1VarPat);
-		// thom yorke
-		System.out.println("who's in bunker");
+		// whos in bunker
 		wholeSong.add(rhythm1LongPat);
-		System.out.println("i'll laugh until my head comes off");
 		wholeSong.add(rhythm1LongPat);
-		System.out.println("who's in bunker");
 		wholeSong.add(rhythm1LongPat);
-		System.out.println("i'll laugh until my head comes off");
 		wholeSong.add(rhythm1LongPat);
-		//chorus
-		System.out.println("here i'm allowed");
+		// chorus
 		wholeSong.add(rhythm1LongPat);
-		System.out.println("here i'm allowed");
 		wholeSong.add(rhythm1LongPat);
-		// ice age come
-		System.out.println("ice age coming");
+		// ice age coming
 		wholeSong.add(rhythm1Pat);
-		System.out.println("ice age coming");
 		wholeSong.add(rhythm1VarPat);
-		System.out.println("let me hear both sides");
 		wholeSong.add(rhythm1VarPat);
-		System.out.println("let me hear both sides");
 		wholeSong.add(rhythm1VarPat);
-		System.out.println("ice age coming");
+        // ice age coming
 		wholeSong.add(rhythm1VarPat);
-		System.out.println("ice age coming");
 		wholeSong.add(rhythm1VarPat);
-		System.out.println("throw me in the fire");
 		wholeSong.add(rhythm1VarPat);
-		System.out.println("throw me in the fire");
 		wholeSong.add(rhythm1VarPat);
-		System.out.println("we're not scaremongering");
 		wholeSong.add(rhythm1VarPat);
-		System.out.println("this is really happening, happening");
+        // this is really happening
 		wholeSong.add(rhythm1VarPat);
-		System.out.println("we're not scaremongering");
 		wholeSong.add(rhythm1VarPat);
-		System.out.println("this is really happening, happening");
 		wholeSong.add(rhythm1VarPat);
-		System.out.println("mobiles working, mobiles chirping");
 		wholeSong.add(rhythm1VarPat);
-		System.out.println("take the money, run");
 		wholeSong.add(rhythm1VarPat);
-		System.out.println("take the money, run");
 		wholeSong.add(rhythm1VarPat);
 		//chorus
 		wholeSong.add(rhythm1LongPat);
 		wholeSong.add(rhythm1LongPat);
+
 
         player.play(wholeSong);
         player.close();
