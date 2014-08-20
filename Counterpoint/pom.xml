@@ -9,7 +9,7 @@
   <url>http://maven.apache.org</url>
   <dependencies>
     <dependency>
-      <groupId>jfugue</groupId>
+      <groupId>org</groupId>
       <artifactId>jfugue</artifactId>
       <version>4.0.3</version>
       <scope>compile</scope>

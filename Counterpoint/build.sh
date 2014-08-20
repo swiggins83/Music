@@ -1,1 +1,1 @@
-mvn -X clean package && mvn -X exec:java
+mvn clean package && mvn exec:java

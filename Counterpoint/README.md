@@ -1,4 +1,4 @@
 Counterpoint
 ------------
 
-A bell-y counterpoint.
+Some sort of counterpoint.

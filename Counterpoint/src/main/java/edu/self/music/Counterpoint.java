@@ -6,169 +6,135 @@ import java.util.Random;
 
 import org.jfugue.Player;
 import org.jfugue.Pattern;
+import org.jfugue.Note;
 
 public class Counterpoint {
 
-	// Music inits
-	static int SONG_LENGTH = 8;
-
-	// start at C and shift notes
-	static String[] majorNotes = {
-		"C", "D", "E", "F", "G", "A", "B", "C6"
-	};
-	static String[] minorNotes = {
-		"C", "D", "Eb", "F", "G", "Ab", "Bb", "C6"
-	};
+	static int SONG_LENGTH = 1024;
+	static int SONG_TEMPO = 60;
 
 	static int[] consonance = {
-		3, 5
+		0, 3, 5, 7, 12
 	};
 
-	static int[] dissonance = {
-		2, 7
+	static double[] rhythms = {
+		1, 0.5, 0.25, 0.125
 	};
 
-	private static String speciesOne(int cantusNote, int pos, Random rand) {
-		// species 1 counterpoint
-		//
-		//
-		int counterNote = consonance[rand.nextInt(consonance.length)];
-		// b has no fifth... kinda
-		while (cantusNote == 6 && counterNote == 5)
-			counterNote = consonance[rand.nextInt(consonance.length)];
+	static Random rand = new Random();
 
-		// avoid unison except beginning and end
-		if (pos != 0 || pos != SONG_LENGTH-1) {
-			while (counterNote == 8)
-				counterNote = consonance[rand.nextInt(consonance.length)];
-		}
+	private static Note speciesOneCounterpoint(Note cantusNote) {
 
-		// up or down
-		if (rand.nextInt(2) == 0) {
-			if (cantusNote - counterNote > 0) 
-				return majorNotes[cantusNote - counterNote] + "w ";
-			else 
-				return majorNotes[cantusNote - counterNote + majorNotes.length-1] + "w ";
-		}
-		else {
-			if (cantusNote + counterNote >= majorNotes.length) 
-				return majorNotes[cantusNote + counterNote - majorNotes.length] + "w ";
-			else 
-				return majorNotes[cantusNote + counterNote] + "w ";
-		}
+		int counterHarmony = consonance[rand.nextInt(consonance.length)];
+		Note counterNote = new Note((byte)(cantusNote.getValue() + ((1-2*rand.nextInt(2)) * counterHarmony)));
+		counterNote.setDecimalDuration(cantusNote.getDecimalDuration());
+
+		return counterNote;
+
 	}
 
-	private static String speciesTwo(int cantusNote, int pos, Random rand) {
-		String counterString = "";
+	private static Pattern speciesTwoCounterpoint(Note cantusNote, int pos) {
+
+		Pattern p = new Pattern();
+		int counterHarmony = 0;
+
 		for (int n=0; n < 2; n++) {
-			int counterNote2 = consonance[rand.nextInt(consonance.length)];
-			while (cantusNote == 6 && counterNote2 == 5)
-				counterNote2 = consonance[rand.nextInt(consonance.length)];
+			counterHarmony = consonance[rand.nextInt(consonance.length)];
+			Note counterNote = new Note((byte)(cantusNote.getValue() + ((1-2*rand.nextInt(2)) * counterHarmony)));
 
-			// avoid unison except beginning and end
-			// also possibly skip first note
-			if (pos != 0 || pos != SONG_LENGTH-1) {
-				while (counterNote2 == 8)
-					counterNote2 = consonance[rand.nextInt(consonance.length)];
-			} else if (pos == 0) {
-				if (rand.nextInt(2) == 0)
-					counterString += "Rh ";
-			}
-
-			// up or down
-			if (rand.nextInt(2) == 0) {
-				if (cantusNote - counterNote2 > 0) 
-					counterString += majorNotes[cantusNote - counterNote2] + "h ";
-				else 
-					counterString += majorNotes[cantusNote - counterNote2 + majorNotes.length-1] + "h ";
-			}
-			else {
-				if (cantusNote + counterNote2 >= majorNotes.length) 
-					counterString += majorNotes[cantusNote + counterNote2 - majorNotes.length] + "h ";
-				else 
-					counterString += majorNotes[cantusNote + counterNote2] + "h ";
-			}
+			counterNote.setDecimalDuration(cantusNote.getDecimalDuration() / 2);
+			p.addElement(counterNote);
 		}
-		return counterString;
+
+		return p;
+	}
+
+	private static Note melodicInversion(Note inverse, int pos, int difference) {
+
+		Note counterNote = new Note((byte)(inverse.getValue() + difference));
+		return counterNote;
+
 	}
 
     public static void main(String[] args) {
 
-
 		// JFugue inits
 		//	                            1       2       3       4
-		Pattern rests = new Pattern("V2 R R R R R R R R R R R R R R R R ");
-        Pattern cantus = new Pattern("T140 V1 I[MARIMBA] ");
-        Pattern fcp = new Pattern("T140 V2 I[XYLOPHONE] ");
-        Pattern scp = new Pattern("T140 V2 I[GLOCKENSPIEL] ");
-        Pattern song = new Pattern();
+		Pattern cantus = new Pattern("T"+SONG_TEMPO+" V1 I[CHURCH_ORGAN] ");
+		Pattern cpo = new Pattern("T"+SONG_TEMPO+" V2 I[CELLO]    ");
+		Pattern cpt = new Pattern("T"+SONG_TEMPO+" V3 I[GLOCKENSPIEL]   ");
+		Pattern inverse = new Pattern("T"+SONG_TEMPO+" V4 I[XYLOPHONE]  ");
+		Pattern song = new Pattern();
 
-        Player player = new Player();
-
-		// init music strings
-        String cantusString = "";
-        String speciesOneString = "";
-		String speciesTwoString = "";
-
-        Random rand = new Random();
+		Player player = new Player();
 
 		// init first note
-		int cantusNote = rand.nextInt(majorNotes.length);
+		byte noteValue = (byte)(rand.nextInt(36) + 60);
+		double rhythm = rhythms[rand.nextInt(rhythms.length-1)];
+		Note first = new Note(noteValue);
+		first.setDecimalDuration(rhythm);
+		cantus.addElement(first);
 
-		// random major/minor
-		if (rand.nextInt(2) == 0)
-			majorNotes = minorNotes;
+		cpo.addElement(speciesOneCounterpoint(first));
 
-        for (int i=0; i < SONG_LENGTH; i++) {
+		// species two returns a pattern, not a note
+		// hence using add rather than addElement
+		cpt.add(speciesTwoCounterpoint(first, 0));
+
+		inverse.addElement(first);
+		Note lastInverse = first;
+
+		Note cantusNote = new Note();
+		byte lastNote = (byte)0;
+
+		int difference = 0;
+
+        // main song loop
+		for (int i=0; i < SONG_LENGTH; i++) {
 
 			// create theme
-			//
-			if (rand.nextInt(2) == 0) {
-				if (cantusNote - 1 < 0)
-					cantusNote = majorNotes.length - 1;
-				else
-					cantusNote -= 1;
+
+			difference = 1-(2*(rand.nextInt(2)));
+
+			rhythm = rhythms[rand.nextInt(rhythms.length-1)];
+
+			if (lastNote != 0) {
+				cantusNote.setValue((byte)(lastNote - difference));
+			} else {
+				cantusNote.setValue((byte)(noteValue - difference));
 			}
-			else {
-				if (cantusNote + 1 == majorNotes.length)
-					cantusNote = 0;
-				else
-					cantusNote += 1;
-			}
+			cantusNote.setDecimalDuration(rhythm);
+			cantus.addElement(cantusNote);
 
-			cantusString += majorNotes[cantusNote] + "w ";
+			lastNote = cantusNote.getValue();
 
-			speciesOneString += speciesOne(cantusNote, i, rand);
+			cpo.addElement(speciesOneCounterpoint(cantusNote));
 
-			speciesTwoString += speciesTwo(cantusNote, i, rand);
-        }
+			// species two returns a pattern, not a note
+			// hence using add rather than addElement
+			cpt.add(speciesTwoCounterpoint(cantusNote, i));
 
+			lastInverse = melodicInversion(lastInverse, i, difference);
+			lastInverse.setDecimalDuration(cantusNote.getDecimalDuration());
+			inverse.addElement(lastInverse);
 
-		//// melodic inversion
-		////          1      2             3   4
-        //cantus.add("Fh. Cq C6h. D6i. E6s G6w A6w ");
-		////       1       2          3   4
-		//fcp.add("Fh. B6q Bh. Ai. Gs E6w D7w ");
+		}
 
-		//// retrograde
-		////       1   2            3    4
-        //fcp.add("A6w G6w E6s D6i. C6h. Cq Fh. ");
-        
-        System.out.println(cantusString);
-        System.out.println(speciesOneString);
-		System.out.println(speciesTwoString);
+		System.out.println("Theme:                    " + cantus.getMusicString());
+		System.out.println("Species one counterpoint: " + cpo.getMusicString());
+		System.out.println("Species two counterpoint: " + cpt.getMusicString());
+		System.out.println("Melodic inverse of theme: " + inverse.getMusicString());
 
-		cantus.add(cantusString);
-		fcp.add(speciesOneString);
-		scp.add(speciesTwoString);
+		song.add(cantus);
+		song.add(cpo);
+		song.add(cpt);
+        // songs sound kinda gross with this on
+		song.add(inverse);
 
-        song.add(cantus);
-        song.add(cantus);
-        song.add(fcp);
-        song.add(scp);
+		player.play(song);
 
-        player.play(song);
+		player.close();
+	}
 
-        player.close();
-    }
 }
+
